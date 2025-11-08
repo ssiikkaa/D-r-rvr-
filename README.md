@@ -1,139 +1,209 @@
-```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>سامانه دانشگاهی | ۲۰۲۵</title>
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-
-  <!-- AOS Animation -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-  <!-- Tailwind (via CDN for demo) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Vazirmatn', 'sans-serif'],
-          },
-          animation: {
-            'float': 'float 6s ease-in-out infinite',
-            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-          },
-          keyframes: {
-            float: {
-              '0%, 100%': { transform: 'translateY(0)' },
-              '50%': { transform: 'translateY(-20px)' },
-            }
-          }
-        }
+  <head>
+    <meta charset="UTF-8" />
+    <title>تبدیل واحد</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      body {
+        font-family: "Vazirmatn", sans-serif;
+        background: linear-gradient(135deg, #e0f7fa, #fff9c4);
+        min-height: 100vh;
       }
-    }
-  </script>
+      select, input {
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        width: 100%;
+        transition: all 0.3s ease;
+      }
+      select:focus, input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+      }
+      button {
+        transition: all 0.3s ease;
+      }
+      button:hover {
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body class="p-4">
+    <div id="root"></div>
 
-  <style>
-    :root {
-      --primary: #004aad;
-      --primary-light: #0065d9;
-      --accent: #ffde59;
-      --gradient: linear-gradient(135deg, #004aad, #007bff);
-    }
-    .dark {
-      --primary: #1e40af;
-      --primary-light: #3b82f6;
-      --accent: #fbbf24;
-    }
-    .glass {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    .card-hover {
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-    }
-    .card-hover:hover {
-      transform: translateY(-16px) scale(1.02);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    }
-    .btn-glow {
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-    }
-    .btn-glow::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: 0.6s;
-      z-index: -1;
-    }
-    .btn-glow:hover::before {
-      left: 100%;
-    }
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 1rem;
-    }
-    th, td {
-      padding: 1rem;
-      text-align: right;
-    }
-    th {
-      background: var(--primary);
-      color: white;
-    }
-    tr {
-      background: white;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      border-radius: 8px;
-    }
-    .dark tr {
-      background: #1f2937;
-    }
-    .dark th {
-      background: #111827;
-    }
-  </style>
-</head>
-<body class="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 text-slate-800 dark:text-slate-200 min-h-screen transition-colors duration-500">
+    <script type="text/babel">
+      const { useState, useMemo } = React;
 
-  <!-- Loading Screen -->
-  <div id="loader" class="fixed inset-0 bg-white dark:bg-slate-900 z-50 flex items-center justify-center">
-    <div class="relative">
-      <div class="w-20 h-20 border-4 border-slate-200 dark:border-slate-700 rounded-full animate-spin"></div>
-      <div class="absolute inset-0 w-20 h-20 border-t-4 border-blue-600 rounded-full animate-spin animation-delay-200"></div>
-      <div class="absolute inset-0 flex items-center justify-center">
-        <svg class="w-10 h-10 text-blue-600" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16z"/>
-          <path fill="currentColor" d="M12 6a6 6 0 100 12 6 6 0 000-12z"/>
-        </svg>
-      </div>
-    </div>
-  </div>
+      function App() {
+        const [category, setCategory] = useState("mass");
+        const [from, setFrom] = useState("");
+        const [to, setTo] = useState("");
+        const [amount, setAmount] = useState(1);
+        const [result, setResult] = useState(null);
+        const [premium, setPremium] = useState(false);
+        const [user, setUser] = useState(null);
+        const [authVisible, setAuthVisible] = useState(false);
 
-  <!-- Theme Toggle -->
-  <button id="theme-toggle" class="fixed top-6 left-6 z-40 p-3 rounded-full bg-white dark:bg-slate-800 shadow-lg hover:shadow-xl transition-all">
-    <i class="ti ti-moon text-xl"></i>
-  </button>
+        const categories = useMemo(() => ({
+          mass: { label: "وزن", units: { g: "گرم", kg: "کیلوگرم", lb: "پوند", oz: "اونس" } },
+          length: { label: "طول", units: { mm: "میلی‌متر", cm: "سانتی‌متر", m: "متر", km: "کیلومتر" } },
+          temp: { label: "دما", units: { c: "سانتی‌گراد", f: "فارنهایت", k: "کلوین" } },
+          speed: { label: "سرعت", units: { kmh: "کیلومتر/ساعت", ms: "متر/ثانیه", mph: "مایل/ساعت" } },
+          volume: { label: "حجم", units: { ml: "میلی‌لیتر", l: "لیتر", m3: "متر مکعب", gal: "گالن" } },
+          area: { label: "سطح", units: { m2: "متر مربع", km2: "کیلومتر مربع", cm2: "سانتی‌متر مربع", ha: "هکتار" } },
+          energy: { label: "انرژی", units: { j: "ژول", kj: "کیلوژول", cal: "کالری", kcal: "کیلوکالری" } },
+          currency: { label: "ارز (ویژه)", units: { usd: "دلار", eur: "یورو", irt: "تومان" }, premium: true }
+        }), []);
 
-  <!-- Header -->
-  <header class="relative overflow-hidden bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white shadow-2xl">
-    <div class="absolute inset-0 bg-black opacity-10"></div>
-    <div class="relative container mx-auto px-6 py-5 flex justify-between items-center">
-      <div class="flex items-center space-x-reverse space-x-4">
+        const convert = () => {
+          if (!from || !to) return;
+          const val = parseFloat(amount);
+          if (category === "mass") {
+            const rates = { g: 1, kg: 1000, lb: 453.592, oz: 28.35 };
+            setResult((val * rates[from]) / rates[to]);
+          } else if (category === "length") {
+            const rates = { mm: 0.001, cm: 0.01, m: 1, km: 1000 };
+            setResult((val * rates[from]) / rates[to]);
+          } else if (category === "temp") {
+            let base;
+            if (from === "c") base = val;
+            if (from === "f") base = (val - 32) * (5 / 9);
+            if (from === "k") base = val - 273.15;
+            let out = base;
+            if (to === "f") out = base * 9 / 5 + 32;
+            if (to === "k") out = base + 273.15;
+            setResult(out);
+          } else if (category === "speed") {
+            const rates = { kmh: 1, ms: 3.6, mph: 1.609 };
+            setResult((val * rates[from]) / rates[to]);
+          } else if (category === "volume") {
+            const rates = { ml: 0.001, l: 1, m3: 1000, gal: 3.78541 };
+            setResult((val * rates[from]) / rates[to]);
+          } else if (category === "area") {
+            const rates = { m2: 1, km2: 1000000, cm2: 0.0001, ha: 10000 };
+            setResult((val * rates[from]) / rates[to]);
+          } else if (category === "energy") {
+            const rates = { j: 1, kj: 1000, cal: 4.184, kcal: 4184 };
+            setResult((val * rates[from]) / rates[to]);
+          } else if (category === "currency") {
+            if (!premium) return alert("برای تبدیل ارز باید ثبت‌نام و اشتراک فعال کنید.");
+            const rates = { usd: 1, eur: 0.92, irt: 58000 };
+            setResult((val * rates[from]) / rates[to]);
+          }
+        };
+
+        const handleLogin = () => {
+          setUser({ name: "کاربر نمونه" });
+          setAuthVisible(false);
+        };
+
+        const handlePay = () => {
+          alert("پرداخت با موفقیت انجام شد ✅");
+          setPremium(true);
+        };
+
+        return (
+          <div className="max-w-lg mx-auto bg-white/90 shadow-2xl rounded-3xl p-6 mt-6 backdrop-blur-md border border-blue-200">
+            <h1 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-500 via-green-500 to-yellow-500 bg-clip-text text-transparent">
+              🌐 تبدیل واحد
+            </h1>
+
+            {/* انتخاب دسته */}
+            <div className="mb-3">
+              <label className="block mb-1 text-gray-700 font-semibold">نوع تبدیل:</label>
+              <select value={category} onChange={e => setCategory(e.target.value)}>
+                {Object.entries(categories).map(([key, val]) => (
+                  <option key={key} value={key}>{val.label}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* انتخاب واحد‌ها */}
+            <div className="grid grid-cols-2 gap-3 mb-3">
+              <div>
+                <label className="block mb-1 font-semibold">از:</label>
+                <select value={from} onChange={e => setFrom(e.target.value)}>
+                  <option value="">انتخاب</option>
+                  {Object.entries(categories[category].units).map(([k,v]) => (
+                    <option key={k} value={k}>{v}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block mb-1 font-semibold">به:</label>
+                <select value={to} onChange={e => setTo(e.target.value)}>
+                  <option value="">انتخاب</option>
+                  {Object.entries(categories[category].units).map(([k,v]) => (
+                    <option key={k} value={k}>{v}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* مقدار */}
+            <div className="mb-3">
+              <label className="block mb-1 font-semibold">مقدار:</label>
+              <input type="number" value={amount} onChange={e => setAmount(e.target.value)} />
+            </div>
+
+            {/* دکمه تبدیل */}
+            <button onClick={convert} className="w-full py-2 rounded-xl bg-gradient-to-r from-blue-500 via-green-500 to-yellow-400 text-white font-bold text-lg shadow-md">
+              تبدیل کن
+            </button>
+
+            {result !== null && (
+              <div className="mt-4 bg-blue-50 border border-blue-300 rounded-xl p-3 text-center text-lg text-gray-700 font-semibold shadow-inner">
+                نتیجه: {result.toFixed(4)}
+              </div>
+            )}
+
+            <div className="mt-6 flex justify-between items-center text-sm text-gray-600">
+              {user ? (
+                <>
+                  <span>👤 {user.name}</span>
+                  <button onClick={() => setUser(null)} className="text-red-500 hover:underline">خروج</button>
+                </>
+              ) : (
+                <button onClick={() => setAuthVisible(true)} className="text-blue-600 hover:underline">ورود / ثبت‌نام</button>
+              )}
+            </div>
+
+            {category === "currency" && !premium && (
+              <div className="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-xl text-center">
+                🔒 این بخش ویژه است — برای فعال‌سازی، اشتراک تهیه کنید.
+                <button onClick={handlePay} className="block mt-2 mx-auto px-4 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600">خرید اشتراک</button>
+              </div>
+            )}
+
+            {authVisible && (
+              <div className="fixed inset-0 bg-black/30 flex items-center justify-center">
+                <div className="bg-white p-6 rounded-2xl w-80 shadow-xl text-center">
+                  <h2 className="text-xl font-bold mb-3 text-blue-600">ورود / ثبت‌نام</h2>
+                  <input placeholder="نام کاربری" className="mb-3 w-full border rounded-lg px-3 py-2" />
+                  <input type="password" placeholder="رمز عبور" className="mb-3 w-full border rounded-lg px-3 py-2" />
+                  <button onClick={handleLogin} className="w-full py-2 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600">تأیید</button>
+                  <button onClick={() => setAuthVisible(false)} className="mt-2 text-gray-500 hover:underline">بستن</button>
+                </div>
+              </div>
+            )}
+
+            <footer className="mt-8 text-center text-gray-500 text-sm">
+              💡 طراحی و برنامه‌نویسی توسط <span className="text-blue-600 font-semibold">مهران کریمی</span>
+            </footer>
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>      <div class="flex items-center space-x-reverse space-x-4">
         <div class="w-12 h-12 bg-yellow-400 rounded-xl flex items-center justify-center animate-float">
           <i class="ti ti-school text-2xl text-blue-900"></i>
         </div>
